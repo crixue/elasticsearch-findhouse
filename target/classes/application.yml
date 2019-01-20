@@ -1,0 +1,26 @@
+server:
+  port: 8053
+
+elasticsearch:
+  host: 192.168.2.110
+  port: 9300
+  cluster:
+    name: 0KScvfi
+    
+# jpa config
+spring:
+  profiles:
+    active: dev
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+      
+      
+  datasource:
+    url: jdbc:mysql://192.168.2.110:3306/houserent?characterEncoding=UTF-8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&useUnicode=true
+    driver-class-name: com.mysql.jdbc.Driver
+    username: xrj
+    password: 123456
+      
