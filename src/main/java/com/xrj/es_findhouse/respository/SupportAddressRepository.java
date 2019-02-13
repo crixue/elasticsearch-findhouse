@@ -6,6 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.xrj.es_findhouse.entity.SupportAddress;
 
+
 public interface SupportAddressRepository extends CrudRepository<SupportAddress, Long>{
     /**
      * 获取所有对应行政级别的信息

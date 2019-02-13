@@ -6,6 +6,10 @@ elasticsearch:
   port: 9300
   cluster:
     name: 0KScvfi
+  
+logging:
+  level:
+    com.xrj.es_findhouse: debug
     
 # jpa config
 spring:

@@ -3,11 +3,8 @@ package com.xrj.es_findhouse.service.search;
 import java.util.Date;
 import java.util.List;
 
-/**
- *
- * 索引结构模板
- * Created by 瓦力.
- */
+import com.xrj.es_findhouse.base.HouseSuggest;
+
 public class HouseIndexTemplate {
     private Long houseId;
 
@@ -49,7 +46,9 @@ public class HouseIndexTemplate {
 
     private List<String> tags;
 
-//    private List<HouseSuggest> suggest;
+    private List<HouseSuggest> suggest;
+    
+    private int weight = 10;
 
 //    private BaiduMapLocation location;
 //
@@ -65,7 +64,15 @@ public class HouseIndexTemplate {
         return houseId;
     }
 
-    public void setHouseId(Long houseId) {
+    public int getWeight() {
+		return weight;
+	}
+
+	public void setWeight(int weight) {
+		this.weight = weight;
+	}
+
+	public void setHouseId(Long houseId) {
         this.houseId = houseId;
     }
 
@@ -221,11 +228,11 @@ public class HouseIndexTemplate {
         this.tags = tags;
     }
 
-//    public List<HouseSuggest> getSuggest() {
-//        return suggest;
-//    }
-//
-//    public void setSuggest(List<HouseSuggest> suggest) {
-//        this.suggest = suggest;
-//    }
+    public List<HouseSuggest> getSuggest() {
+        return suggest;
+    }
+
+    public void setSuggest(List<HouseSuggest> suggest) {
+        this.suggest = suggest;
+    }
 }
