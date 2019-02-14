@@ -22,6 +22,8 @@ import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.DeleteByQueryAction;
 import org.elasticsearch.rest.RestStatus;
 import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.sort.SortOrder;
 import org.elasticsearch.search.suggest.Suggest;
 import org.elasticsearch.search.suggest.Suggest.Suggestion;
@@ -33,6 +35,7 @@ import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -375,5 +378,31 @@ public class SearchServiceImpl implements ISearchService {
         List<String> suggests = Lists.newArrayList(suggestSet.toArray(new String[]{}));
         return ServiceResult.of(suggests);
 	}
+	
+	@Override
+	public ServiceResult<Long> aggregateDistrictHouse(HouseIndexTemplate indexTemplate) {
+		BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
+				.filter(QueryBuilders.termQuery(HouseIndexKey.CITY_EN_NAME, indexTemplate.getCityEnName()))
+				.filter(QueryBuilders.termQuery(HouseIndexKey.REGION_EN_NAME, indexTemplate.getRegionEnName()))
+				.filter(QueryBuilders.termsQuery(HouseIndexKey.DISTRICT, indexTemplate.getDistrict()));
+		
+		SearchRequestBuilder requestBuilder = this.client.prepareSearch(INDEX_NAME)
+				.setTypes(INDEX_TYPE)
+				.setQuery(boolQueryBuilder)
+				.addAggregation(AggregationBuilders.terms(HouseIndexKey.AGG_DISTRICT).field(HouseIndexKey.DISTRICT))
+				.setSize(0);
+		log.debug(requestBuilder.toString());
+		
+		SearchResponse response = requestBuilder.get();
+		if (response.status() == RestStatus.OK) {
+			Terms term = response.getAggregations().get(HouseIndexKey.AGG_DISTRICT);
+			if (!CollectionUtils.isEmpty(term.getBuckets())) {
+				org.elasticsearch.search.aggregations.bucket.terms.Terms.Bucket bucket = term.getBucketByKey(indexTemplate.getDistrict());
+				return ServiceResult.of(bucket.getDocCount());
+			}
+		}
+		return ServiceResult.of(0L);
+	}
+	
 	
 }

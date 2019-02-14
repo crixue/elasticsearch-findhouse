@@ -19,4 +19,11 @@ public interface ISearchService {
 	 */
 	ServiceResult<List<String>> suggestCompletion(String prefix);
 
+	/**
+	 * 获取指定city-region-小区的聚合数目
+	 * @param indexTemplate
+	 * @return
+	 */
+	ServiceResult<Long> aggregateDistrictHouse(HouseIndexTemplate indexTemplate);
+
 }

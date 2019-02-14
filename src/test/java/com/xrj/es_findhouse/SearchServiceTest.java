@@ -10,6 +10,7 @@ import com.xrj.es_findhouse.base.HouseSort;
 import com.xrj.es_findhouse.base.ServiceMultiResult;
 import com.xrj.es_findhouse.form.RentSearch;
 import com.xrj.es_findhouse.service.search.HouseIndexMessage;
+import com.xrj.es_findhouse.service.search.HouseIndexTemplate;
 import com.xrj.es_findhouse.service.search.ISearchService;
 
 public class SearchServiceTest extends ApplicationTests {
@@ -49,6 +50,16 @@ public class SearchServiceTest extends ApplicationTests {
 		for (String string : completions) {
 			System.out.println(string);
 		}
+	}
+	
+	@Test
+	public void testAggDistict() {
+		HouseIndexTemplate indexTemplate = new HouseIndexTemplate();
+		indexTemplate.setCityEnName("bj");
+		indexTemplate.setRegionEnName("hdq");
+		indexTemplate.setDistrict("融泽嘉园");
+		long nums = searchService.aggregateDistrictHouse(indexTemplate).getResult();
+		System.out.println(nums);
 	}
 	
 }
